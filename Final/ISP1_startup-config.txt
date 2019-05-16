@@ -13,7 +13,7 @@ hostname ISP1
 !
 !
 !
-no ip cef
+ip cef
 no ipv6 cef
 !
 !
@@ -86,4 +86,3 @@ line vty 0 4
 !
 !
 end
-

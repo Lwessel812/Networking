@@ -145,9 +145,9 @@ router rip
 !
 ip nat pool PATPOOL 209.165.2.1 209.165.2.4 netmask 255.255.255.248
 ip nat inside source list PAT pool PATPOOL overload
-ip nat inside source static 172.20.20.254 209.165.2.6 
+ip nat inside source static 172.20.20.254 209.165.2.6
 ip classless
-ip route 0.0.0.0 0.0.0.0 Serial0/0/1 
+ip route 0.0.0.0 0.0.0.0 Serial0/0/1
 ip route 0.0.0.0 0.0.0.0 Serial0/0/0 5
 !
 ip flow-export version 9
@@ -185,4 +185,3 @@ line vty 5 15
 !
 !
 end
-
