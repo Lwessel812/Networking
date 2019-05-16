@@ -25,7 +25,6 @@ interface FastEthernet0/1
  switchport mode access
  switchport port-security
  switchport port-security mac-address sticky
- switchport port-security mac-address sticky 0030.F206.1B85
 !
 interface FastEthernet0/2
  switchport access vlan 999
@@ -198,7 +197,6 @@ interface GigabitEthernet0/2
  switchport mode access
  switchport port-security
  switchport port-security mac-address sticky
- shutdown
 !
 interface Vlan1
  no ip address
