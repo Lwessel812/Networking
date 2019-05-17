@@ -1,42 +1,18 @@
 !
-version 15.1
+enable
+!
+configure terminal
+!
 no service timestamps log datetime msec
 no service timestamps debug datetime msec
 no service password-encryption
 !
 hostname ISP2
 !
-!
-!
-!
-!
-!
-!
-!
 ip cef
 no ipv6 cef
 !
-!
-!
-!
-license udi pid CISCO1941/K9 sn FTX1524GDKJ-
-!
-!
-!
-!
-!
-!
-!
-!
-!
-!
-!
 spanning-tree mode pvst
-!
-!
-!
-!
-!
 !
 interface GigabitEthernet0/0
  ip address 10.10.14.2 255.255.255.252
@@ -69,13 +45,6 @@ ip classless
 !
 ip flow-export version 9
 !
-!
-!
-!
-!
-!
-!
-!
 line con 0
 !
 line aux 0
@@ -83,6 +52,6 @@ line aux 0
 line vty 0 4
  login
 !
-!
-!
 end
+!
+copy running-config startup-configure

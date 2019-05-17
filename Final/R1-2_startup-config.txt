@@ -1,0 +1,152 @@
+!
+enable
+!
+vlan database
+!
+vlan 45 name PC45
+vlan 60 name Server
+vlan 99 name Management
+vlan 100 name Native
+!
+exit
+!
+configure terminal
+!
+service timestamps log datetime msec
+service timestamps debug datetime msec
+service password-encryption
+!
+hostname R1-2
+!
+enable secret 5 $1$mERr$YlCkLMcTYWwkF1Ccndtll.
+!
+ip dhcp excluded-address 192.10.45.1
+ip dhcp excluded-address 192.10.60.1
+ip dhcp excluded-address 192.10.60.254
+ip dhcp excluded-address 192.10.99.1
+ip dhcp excluded-address 192.10.99.2
+ip dhcp excluded-address 192.10.100.1
+ip dhcp excluded-address 192.20.45.1
+ip dhcp excluded-address 192.20.60.1
+ip dhcp excluded-address 192.20.99.1
+ip dhcp excluded-address 192.20.99.2
+ip dhcp excluded-address 192.20.100.1
+!
+ip dhcp pool DHCP10.45
+ network 192.10.45.0 255.255.255.0
+ default-router 192.10.45.1
+ip dhcp pool DHCP10.99
+ network 192.10.9.0 255.255.255.0
+ default-router 192.10.99.1
+ip dhcp pool DHCP20.45
+ network 192.20.45.0 255.255.255.0
+ default-router 192.20.45.1
+ip dhcp pool DHCP10.99
+ network 192.20.9.0 255.255.255.0
+ default-router 192.20.99.1
+!
+ip cef
+no ipv6 cef
+!
+no ip domain-lookup
+ip domain-name R1-2.com
+!
+crypto key generate rsa general-keys modulus 1024
+!
+username Cisco secret 5 $1$mERr$YlCkLMcTYWwkF1Ccndtll.
+!
+ip ssh version 2
+!
+spanning-tree mode pvst
+!
+interface FastEthernet0/0
+ no ip address
+ duplex auto
+ speed auto
+!
+interface FastEthernet0/0.45
+ encapsulation dot1Q 45
+ ip address 192.10.45.1 255.255.255.0
+!
+interface FastEthernet0/0.60
+ encapsulation dot1Q 60
+ ip address 192.10.60.1 255.255.255.0
+!
+interface FastEthernet0/0.99
+ encapsulation dot1Q 99
+ ip address 192.10.99.1 255.255.255.0
+!
+interface FastEthernet0/0.100
+ encapsulation dot1Q 100
+ ip address 192.10.100.1 255.255.255.0
+!
+interface FastEthernet0/1
+ no ip address
+ duplex auto
+ speed auto
+!
+interface FastEthernet0/1.45
+ encapsulation dot1Q 45
+ ip address 192.20.45.1 255.255.255.0
+!
+interface FastEthernet0/1.60
+ encapsulation dot1Q 60
+ ip address 192.20.60.1 255.255.255.0
+!
+interface FastEthernet0/1.99
+ encapsulation dot1Q 99
+ ip address 192.20.99.1 255.255.255.0
+!
+interface FastEthernet0/1.100
+ encapsulation dot1Q 100
+ ip address 192.20.100.1 255.255.255.0
+!
+interface Serial0/0/0
+ ip address 10.10.10.1 255.255.255.252
+!
+interface Serial0/0/1
+ ip address 10.10.11.1 255.255.255.252
+!
+router rip
+ version 2
+ passive-interface FastEthernet0/0
+ passive-interface FastEthernet0/1
+ network 10.0.0.0
+ network 192.10.0.0
+ network 192.20.0.0
+ no auto-summary
+!
+ip nat pool PATPOOL 209.165.1.1 209.165.1.4 netmask 255.255.255.248
+ip nat inside source list PAT pool PATPOOL overload
+ip nat inside source static 192.10.60.254 209.165.1.6
+ip classless
+ip route 0.0.0.0 0.0.0.0 Serial0/0/1
+ip route 0.0.0.0 0.0.0.0 Serial0/0/0 5
+!
+ip flow-export version 9
+!
+ip access-list standard PAT
+ permit 192.10.45.0 0.0.0.255
+ permit 192.20.45.0 0.0.0.255
+!
+line con 0
+ password 7 0802455D0A16
+ logging synchronous
+ login
+!
+line aux 0
+!
+line vty 0 4
+ password 7 0802455D0A16
+ logging synchronous
+ login local
+ transport input ssh
+line vty 5 15
+ password 7 0802455D0A16
+ logging synchronous
+ login local
+ transport input ssh
+!
+end
+!
+copy running-config startup-config

@@ -1,5 +1,21 @@
 !
-version 12.2
+enable
+!
+configure terminal
+!
+vlan 10
+ name PC10
+vlan 11
+ PC11
+vlan 20
+ name Printer
+vlan 99
+ name Management
+vlan 100
+ name Native
+vlan 999
+ name Disabled
+!
 service timestamps log datetime msec
 service timestamps debug datetime msec
 service password-encryption
@@ -8,14 +24,13 @@ hostname S3
 !
 enable secret 5 $1$mERr$YlCkLMcTYWwkF1Ccndtll.
 !
-!
-!
 ip ssh version 2
 no ip domain-lookup
 ip domain-name S3.com
 !
 username Cisco secret 5 $1$mERr$YlCkLMcTYWwkF1Ccndtll.
 !
+crypto key generate rsa general-keys modulus 1024
 !
 spanning-tree mode pvst
 spanning-tree extend system-id
@@ -26,164 +41,11 @@ interface FastEthernet0/1
  switchport port-security
  switchport port-security mac-address sticky
 !
-interface FastEthernet0/2
+interface range FastEthernet0/2 - FastEthernet0/24
  switchport access vlan 999
  switchport mode access
  switchport port-security
- switchport port-security mac-address sticky
- shutdown
-!
-interface FastEthernet0/3
- switchport access vlan 999
- switchport mode access
- switchport port-security
- switchport port-security mac-address sticky
- shutdown
-!
-interface FastEthernet0/4
- switchport access vlan 999
- switchport mode access
- switchport port-security
- switchport port-security mac-address sticky
- shutdown
-!
-interface FastEthernet0/5
- switchport access vlan 999
- switchport mode access
- switchport port-security
- switchport port-security mac-address sticky
- shutdown
-!
-interface FastEthernet0/6
- switchport access vlan 999
- switchport mode access
- switchport port-security
- switchport port-security mac-address sticky
- shutdown
-!
-interface FastEthernet0/7
- switchport access vlan 999
- switchport mode access
- switchport port-security
- switchport port-security mac-address sticky
- shutdown
-!
-interface FastEthernet0/8
- switchport access vlan 999
- switchport mode access
- switchport port-security
- switchport port-security mac-address sticky
- shutdown
-!
-interface FastEthernet0/9
- switchport access vlan 999
- switchport mode access
- switchport port-security
- switchport port-security mac-address sticky
- shutdown
-!
-interface FastEthernet0/10
- switchport access vlan 999
- switchport mode access
- switchport port-security
- switchport port-security mac-address sticky
- shutdown
-!
-interface FastEthernet0/11
- switchport access vlan 999
- switchport mode access
- switchport port-security
- switchport port-security mac-address sticky
- shutdown
-!
-interface FastEthernet0/12
- switchport access vlan 999
- switchport mode access
- switchport port-security
- switchport port-security mac-address sticky
- shutdown
-!
-interface FastEthernet0/13
- switchport access vlan 999
- switchport mode access
- switchport port-security
- switchport port-security mac-address sticky
- shutdown
-!
-interface FastEthernet0/14
- switchport access vlan 999
- switchport mode access
- switchport port-security
- switchport port-security mac-address sticky
- shutdown
-!
-interface FastEthernet0/15
- switchport access vlan 999
- switchport mode access
- switchport port-security
- switchport port-security mac-address sticky
- shutdown
-!
-interface FastEthernet0/16
- switchport access vlan 999
- switchport mode access
- switchport port-security
- switchport port-security mac-address sticky
- shutdown
-!
-interface FastEthernet0/17
- switchport access vlan 999
- switchport mode access
- switchport port-security
- switchport port-security mac-address sticky
- shutdown
-!
-interface FastEthernet0/18
- switchport access vlan 999
- switchport mode access
- switchport port-security
- switchport port-security mac-address sticky
- shutdown
-!
-interface FastEthernet0/19
- switchport access vlan 999
- switchport mode access
- switchport port-security
- switchport port-security mac-address sticky
- shutdown
-!
-interface FastEthernet0/20
- switchport access vlan 999
- switchport mode access
- switchport port-security
- switchport port-security mac-address sticky
- shutdown
-!
-interface FastEthernet0/21
- switchport access vlan 999
- switchport mode access
- switchport port-security
- switchport port-security mac-address sticky
- shutdown
-!
-interface FastEthernet0/22
- switchport access vlan 999
- switchport mode access
- switchport port-security
- switchport port-security mac-address sticky
- shutdown
-!
-interface FastEthernet0/23
- switchport access vlan 999
- switchport mode access
- switchport port-security
- switchport port-security mac-address sticky
- shutdown
-!
-interface FastEthernet0/24
- switchport access vlan 999
- switchport mode access
- switchport port-security
+ switchport port-security maximum 1
  switchport port-security mac-address sticky
  shutdown
 !
@@ -192,8 +54,8 @@ interface GigabitEthernet0/1
  switchport trunk allowed vlan 10-11,20,99-100
  switchport mode trunk
 !
-interface GigabitEthernet0/2
- switchport access vlan 99
+interface GigabitEthernet 0/2
+ switchport access vlan 20
  switchport mode access
  switchport port-security
  switchport port-security mac-address sticky
@@ -203,13 +65,9 @@ interface Vlan1
  shutdown
 !
 interface Vlan99
- mac-address 00e0.f742.6d01
  ip address 172.20.99.30 255.255.255.0
 !
 ip default-gateway 172.20.99.1
-!
-!
-!
 !
 line con 0
  password 7 0802455D0A16
@@ -227,7 +85,6 @@ line vty 5 15
  login local
  transport input ssh
 !
-!
-!
-!
 end
+!
+copy running-config startup-configure

@@ -3,12 +3,10 @@ enable
 !
 configure terminal
 !
-vlan 10
- name PC10
-vlan 11
- PC11
-vlan 20
- name Printer
+vlan 45
+ name PC45
+vlan 60
+ name Server
 vlan 99
  name Management
 vlan 100
@@ -20,13 +18,13 @@ service timestamps log datetime msec
 service timestamps debug datetime msec
 service password-encryption
 !
-hostname S4
+hostname S1
 !
 enable secret 5 $1$mERr$YlCkLMcTYWwkF1Ccndtll.
 !
 ip ssh version 2
 no ip domain-lookup
-ip domain-name S4.com
+ip domain-name S1.com
 !
 crypto key generate rsa general-keys modulus 1024
 !
@@ -36,10 +34,9 @@ spanning-tree mode pvst
 spanning-tree extend system-id
 !
 interface FastEthernet0/1
- switchport access vlan 11
+ switchport access vlan 45
  switchport mode access
  switchport port-security
- switchport port-security maximum 1
  switchport port-security mac-address sticky
 !
 interface range FastEthernet0/2 - FastEthernet0/24
@@ -56,10 +53,9 @@ interface GigabitEthernet0/1
  switchport mode trunk
 !
 interface GigabitEthernet0/2
- switchport access vlan 99
+ switchport access vlan 60
  switchport mode access
  switchport port-security
- switchport port-security maximum 1
  switchport port-security mac-address sticky
 !
 interface Vlan1
@@ -67,9 +63,9 @@ interface Vlan1
  shutdown
 !
 interface Vlan99
- ip address 172.10.99.40 255.255.255.0
+ ip address 192.10.99.2 255.255.255.0
 !
-ip default-gateway 172.10.99.1
+ip default-gateway 192.10.99.1
 !
 line con 0
  password 7 0802455D0A16

@@ -1,15 +1,25 @@
 !
-version 12.4
+enable
+!
+vlan databast
+!
+vlan 10 name PC10
+vlan 11 name PC11
+vlan 20 name Printer
+vlan 99 name Management
+vlan 100 name Native
+!
+exit
+!
+configure terminal
+!
 service timestamps log datetime msec
 service timestamps debug datetime msec
 service password-encryption
 !
 hostname R3-4
 !
-!
-!
 enable secret 5 $1$mERr$YlCkLMcTYWwkF1Ccndtll.
-!
 !
 ip dhcp excluded-address 172.10.10.1
 ip dhcp excluded-address 172.10.100.1
@@ -41,33 +51,19 @@ ip dhcp pool DHCP20.99
  network 172.20.99.0 255.255.255.0
  default-router 172.20.99.1
 !
-!
-!
 ip cef
 no ipv6 cef
 !
-!
-!
-username Cisco secret 5 $1$mERr$YlCkLMcTYWwkF1Ccndtll.
-!
-!
-!
-!
-!
-!
-!
-!
-ip ssh version 2
 no ip domain-lookup
 ip domain-name R3-4.com
 !
+crypto key generate rsa general-keys modulus 1024
+!
+username Cisco secret 5 $1$mERr$YlCkLMcTYWwkF1Ccndtll.
+!
+ip ssh version 2
 !
 spanning-tree mode pvst
-!
-!
-!
-!
-!
 !
 interface FastEthernet0/0
  no ip address
@@ -152,17 +148,11 @@ ip route 0.0.0.0 0.0.0.0 Serial0/0/0 5
 !
 ip flow-export version 9
 !
-!
 ip access-list standard PAT
  permit 172.10.10.0 0.0.0.255
  permit 172.10.11.0 0.0.0.255
  permit 172.20.10.0 0.0.0.255
  permit 172.20.11.0 0.0.0.255
-!
-!
-!
-!
-!
 !
 line con 0
  password 7 0802455D0A16
@@ -182,6 +172,6 @@ line vty 5 15
  login local
  transport input ssh
 !
-!
-!
 end
+!
+copy running-config startup-config
